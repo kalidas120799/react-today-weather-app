@@ -8,7 +8,7 @@ export default class Weatherapp extends Component {
         this.state = {
             weatherdata: [],
             area: '',
-            popularcity: ["coimbatore","bangalore"]
+            popularcity: ["coimbatore", "bangalore"]
         }
     }
     componentDidMount = async () => {
@@ -16,14 +16,17 @@ export default class Weatherapp extends Component {
         const { popularcity } = this.state
         for (var i = 0; i < popularcity.length; i++) {
             const weatherinfo = await weatherInfo(popularcity[i])
-            const { name, wind, main, weather } = weatherinfo
-            const weatherdata = {
-                name: name,
-                wind: wind.speed,
-                temp: main.temp,
-                weather: weather[0].description
+            if (weatherinfo !== false) {
+                const { name, wind, main, weather } = weatherinfo
+                const weatherdata = {
+                    name: name,
+                    wind: wind.speed,
+                    temp: main.temp,
+                    weather: weather[0].description
+                }
+                data.push(weatherdata)
             }
-            data.push(weatherdata)
+
         }
         this.setState({ weatherdata: data })
     }
@@ -34,30 +37,32 @@ export default class Weatherapp extends Component {
         const { area, weatherdata, popularcity } = this.state
         if (popularcity.includes(area.toLowerCase())) return alert(`${area} Already Below The List`)
         const weatherinfo = await weatherInfo(area.toLowerCase())
-        if(weatherinfo.message===undefined){
-            const { name, wind, main, weather } = weatherinfo
-            const newweatherdata = {
-                name: name,
-                wind: wind.speed,
-                temp: main.temp,
-                weather: weather[0].description
+        if (weatherinfo.message === undefined) {
+            if (weatherinfo !== false) {
+                const { name, wind, main, weather } = weatherinfo
+                const newweatherdata = {
+                    name: name,
+                    wind: wind.speed,
+                    temp: main.temp,
+                    weather: weather[0].description
+                }
+                if (weatherdata.length === 3) {
+                    this.setState({ weatherdata: [newweatherdata], popularcity: [...popularcity, area] })
+                } else {
+                    this.setState({ weatherdata: [...weatherdata, newweatherdata], popularcity: [...popularcity, area] })
+                }
             }
-            if(weatherdata.length===3){
-                this.setState({ weatherdata: [newweatherdata], popularcity: [...popularcity, area] })
-            }else{
-                this.setState({ weatherdata: [...weatherdata, newweatherdata], popularcity: [...popularcity, area] })
-            }
-        }else{
+        } else {
             alert(weatherinfo.message)
         }
-       
+
     }
     render() {
         const { weatherdata, area } = this.state
-        const nodata={
+        const nodata = {
             name: "Please Wait...",
             wind: 0,
-            temp:273.15,
+            temp: 273.15,
             weather: "Please Wait..."
         }
         return (
@@ -72,7 +77,7 @@ export default class Weatherapp extends Component {
                             {
                                 weatherdata.length !== 0 ? weatherdata.map((data, index) => (
                                     <Card weatherdata={data} key={index} />
-                                )) :  <Card weatherdata={nodata}  />
+                                )) : <Card weatherdata={nodata} />
                             }
 
                         </div>
