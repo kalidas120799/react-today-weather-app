@@ -4,4 +4,4 @@
 
 [Weather Api](https://openweathermap.org/)
 
-![Weather Cast App](https://github.com/kalidas120799/React-Weather-App/blob/master/src/assets/img/weather%20home.png?raw=true)
+![Weather Cast App](https://github.com/kalidas120799/react-today-weather-app/blob/master/src/assets/img/weather%20home.png?raw=true)
